@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package fr.devavance.metier.views.interfaces;
+package fr.devavance.metier.views;
 
+import fr.devavance.metier.views.interfaces.IServletView;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -49,15 +50,13 @@ public class LoginView extends HttpServlet implements IServletView {
             throws ServletException, IOException {
         processRequest(request, response);
         try (PrintWriter out = response.getWriter()) {
-            this.include_header(request, response);
-            out.println("<form>");
+            out.println("<form action='controller_login' method='post'>");
             out.println("<label>login</label>");
             out.println("<input type='text' name='login'/></br></br>");
             out.println("<label>password</label>");
             out.println("<input type='password' name='password'/></br>");
             out.println("<input type='submit' value='Login'/>");
             out.println("</form>");
-            this.include_footer(request, response);
         }
     }
 
@@ -77,11 +76,19 @@ public class LoginView extends HttpServlet implements IServletView {
 
     @Override
     public void include_header(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher(HEADER).include(request, response);
+        try {
+            getServletContext().getRequestDispatcher(HEADER).include(request, response);
+        } catch (ServletException e) {
+            throw new ServletException("Erreur lors de l'inclusion du header", e);
+        }
     }
 
     @Override
     public void include_footer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher(FOOTER).include(request, response);
+        try {
+            getServletContext().getRequestDispatcher(FOOTER).include(request, response);
+        } catch (ServletException e) {
+            throw new ServletException("Erreur lors de l'inclusion du header", e);
+        }
     }
 }
